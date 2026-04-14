@@ -10,15 +10,16 @@ module top(
         .w(sw),
         .clk(btnC),
         .reset(btnU),
-        .z(led[1])
+        .z(led[1]),
+        .State(led[9:7])
     );
     
-    
-    onehot one (
+    one_hot one (
         .w(sw),
         .clk(btnC),
         .reset(btnU),
-        .z(led[0])
+        .z(led[0]),
+        .led(led[6:2])
     );
 
 endmodule
