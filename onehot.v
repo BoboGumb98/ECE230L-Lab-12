@@ -5,11 +5,16 @@ module one_hot (
     input clk,
     input reset,
     output z, 
-    output stateCur
+    output [4:0] led
 );
 
     wire Anext, Bmext, Cnext, Dnext, Enext;
     wire Astate, Bstate, Cstate, Dstate, Estate;
+    assign led[0] = Astate;
+    assign led[1] = Bstate;
+    assign led[2] = Cstate;
+    assign led[3] = Dstate;
+    assign led[4] = Estate;
     
 //    A = 5'b00001;
 //    B = 5'b00010;
@@ -20,7 +25,7 @@ module one_hot (
     dff Adff(
         .Default(1'b1),
         .D(Anext),
-        .clk(cld),
+        .clk(clk),
         .Q(Astate),
         .reset(reset)
     );
@@ -28,7 +33,7 @@ module one_hot (
     dff Bdff(
         .Default(1'b0),
         .D(Bnext),
-        .clk(cld),
+        .clk(clk),
         .Q(Bstate),
         .reset(reset)
     );
@@ -36,7 +41,7 @@ module one_hot (
     dff Cdff(
         .Default(1'b0),
         .D(Cnext),
-        .clk(cld),
+        .clk(clk),
         .Q(Cstate),
         .reset(reset)
     );
@@ -44,7 +49,7 @@ module one_hot (
         dff Ddff(
         .Default(1'b0),
         .D(Dnext),
-        .clk(cld),
+        .clk(clk),
         .Q(Dstate),
         .reset(reset)
     );
@@ -52,16 +57,16 @@ module one_hot (
         dff Edff(
         .Default(1'b0),
         .D(Enext),
-        .clk(cld),
+        .clk(clk),
         .Q(Estate),
         .reset(reset)
     );
     
     assign z = Cstate | Estate;
-    assign Anext = 5'b00001;
+    assign Anext = Astate & 1'b0;
     assign Bnext = Astate & ~w | Dstate & ~w | Estate & ~w;
     assign Cnext = Bstate & ~w | Cstate & ~w;
-    assign Dnext = Astate & w | Cstate & w;
+    assign Dnext = Astate & w | Cstate & w | Bstate & w;
     assign Enext = Dstate & w | Estate & w;
 
 
